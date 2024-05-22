@@ -1,11 +1,51 @@
-<form>
+<form (ngSubmit)="submitRegisterForm()" [formGroup]="registerForm">
+  <input type="text" placeholder="Nome" formControlName="name" />
+
+  <p
+    *ngIf="errors.name?.['required'] && registerForm.get('name')?.value!==null"
+  >
+    O nome é obrigatório!
+  </p>
+  <p *ngIf="errors.name?.['maxlength']">
+    O nome pode ter no máximo 80 caracteres!
+  </p>
+
+  <input type="email" placeholder="E-mail" formControlName="email" />
   <div>
-    <input type="text" placeholder="Nome" />
-    <input type="email" placeholder="E-mail" />
+    <p
+      *ngIf="errors.email?.['required'] && registerForm.get('email')?.value!==null"
+    >
+      O e-mail é obrigatório!
+    </p>
+    <p *ngIf="errors.email?.['email']">Forneça um formato de e-mail válido!</p>
   </div>
   <div>
-    <input type="password" placeholder="Senha" />
-    <input type="password" placeholder="Confirmar Senha" />
+    <input type="password" placeholder="Senha" formControlName="password" />
+    <p
+      *ngIf="errors.password?.['required'] && registerForm.get('password')?.value!==null"
+    >
+      A senha é obrigatória
+    </p>
+    <p *ngIf="errors.password?.['minlength']">
+      A senha precisa ter no mínimo 8 caracteres
+    </p>
+    <p *ngIf="errors.password?.['pattern']">
+      A senha precisa conter pelo menos uma letra maiúscula, uma letra
+      minúscula, um número e um caractere especial
+    </p>
+    <input
+      type="password"
+      placeholder="Confirmar Senha"
+      formControlName="confirmPassword"
+    />
+    <p
+      *ngIf="errors.confirmPassword?.['required'] && registerForm.get('confirmPassword')?.value!==null"
+    >
+      Confirmar a senha é obrigatório
+    </p>
+    <p *ngIf="registerForm.errors?.['PasswordNoMatch']">
+      As senhas não correspondem
+    </p>
   </div>
   <button>Cadastrar-se</button>
 </form>
