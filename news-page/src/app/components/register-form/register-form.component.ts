@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, signal } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -9,6 +9,8 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCommonModule } from '@angular/material/core';
 
 export const confirmPasswordValidator: ValidatorFn = (
   control: AbstractControl
@@ -21,11 +23,35 @@ export const confirmPasswordValidator: ValidatorFn = (
 @Component({
   selector: 'app-register-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule, MatCommonModule],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.scss'],
 })
 export class RegisterFormComponent {
+  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+
+  readonly isPasswordHiddenSignal = signal(true);
+  readonly isConfirmPasswordHiddenSignal = signal(true);
+
+  get isPasswordHidden() {
+    return this.isPasswordHiddenSignal();
+  }
+
+  get isConfirmPasswordHidden() {
+    return this.isConfirmPasswordHiddenSignal();
+  }
+
+  togglePasswordVisibility(field: 'password' | 'confirmPassword') {
+    if (field === 'password') {
+      this.isPasswordHiddenSignal.set(!this.isPasswordHiddenSignal());
+    } else {
+      this.isConfirmPasswordHiddenSignal.set(
+        !this.isConfirmPasswordHiddenSignal()
+      );
+    }
+    this.changeDetectorRef.markForCheck();
+  }
+
   registerForm = new FormGroup(
     {
       name: new FormControl(null, [

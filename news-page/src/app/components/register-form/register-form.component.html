@@ -1,8 +1,7 @@
 <form (ngSubmit)="submitRegisterForm()" [formGroup]="registerForm">
   <input type="text" placeholder="Nome" formControlName="name" />
-
   <p
-    *ngIf="errors.name?.['required'] && registerForm.get('name')?.value!==null"
+    *ngIf="errors.name?.['required'] && registerForm.get('name')?.value !== null"
   >
     O nome é obrigatório!
   </p>
@@ -13,16 +12,26 @@
   <input type="email" placeholder="E-mail" formControlName="email" />
   <div>
     <p
-      *ngIf="errors.email?.['required'] && registerForm.get('email')?.value!==null"
+      *ngIf="errors.email?.['required'] && registerForm.get('email')?.value !== null"
     >
       O e-mail é obrigatório!
     </p>
     <p *ngIf="errors.email?.['email']">Forneça um formato de e-mail válido!</p>
   </div>
+
   <div>
-    <input type="password" placeholder="Senha" formControlName="password" />
+    <input
+      [attr.type]="isPasswordHidden ? 'password' : 'text'"
+      placeholder="Senha"
+      formControlName="password"
+    />
+    <button type="button" (click)="togglePasswordVisibility('password')">
+      <mat-icon>{{
+        isPasswordHidden ? "visibility" : "visibility_off"
+      }}</mat-icon>
+    </button>
     <p
-      *ngIf="errors.password?.['required'] && registerForm.get('password')?.value!==null"
+      *ngIf="errors.password?.['required'] && registerForm.get('password')?.value !== null"
     >
       A senha é obrigatória
     </p>
@@ -33,13 +42,21 @@
       A senha precisa conter pelo menos uma letra maiúscula, uma letra
       minúscula, um número e um caractere especial
     </p>
+
+
+ 
     <input
-      type="password"
+      [attr.type]="isConfirmPasswordHidden ? 'password' : 'text'"
       placeholder="Confirmar Senha"
       formControlName="confirmPassword"
     />
+    <button type="button" (click)="togglePasswordVisibility('confirmPassword')">
+      <mat-icon>{{
+        isConfirmPasswordHidden ? "visibility" : "visibility_off"
+      }}</mat-icon>
+    </button>
     <p
-      *ngIf="errors.confirmPassword?.['required'] && registerForm.get('confirmPassword')?.value!==null"
+      *ngIf="errors.confirmPassword?.['required'] && registerForm.get('confirmPassword')?.value !== null"
     >
       Confirmar a senha é obrigatório
     </p>
@@ -47,5 +64,6 @@
       As senhas não correspondem
     </p>
   </div>
+
   <button type="submit">Cadastrar-se</button>
 </form>
