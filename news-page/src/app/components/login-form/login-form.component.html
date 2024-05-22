@@ -1,12 +1,24 @@
-<form>
+<form (ngSubmit)="submitLoginForm()" [formGroup]="loginForm">
   <div>
-    <input type="email" placeholder="E-mail" />
+    <input type="email" placeholder="E-mail" formControlName="email" />
+    <p
+      *ngIf="errors.email?.['required'] && loginForm.get('email')?.value!==null "
+      class="paragraph validation errors"
+    >
+      O e-mail é obrigatório!
+    </p>
   </div>
   <div>
-    <input type="password" placeholder="Senha" />
+    <input type="password" placeholder="Senha" formControlName="password" />
+    <p
+      *ngIf="errors.password?.['required'] && loginForm.get('password')?.value!==null"
+      class="paragraph validation errors"
+    >
+      A senha é obrigatória
+    </p>
   </div>
   <div>
-    <button>Entrar</button>
+    <button type="submit">Entrar</button>
   </div>
   <div>
     <p>Não é cadastrado?</p>
