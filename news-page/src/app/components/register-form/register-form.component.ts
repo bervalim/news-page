@@ -30,8 +30,8 @@ export const confirmPasswordValidator: ValidatorFn = (
 export class RegisterFormComponent {
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
-  readonly isPasswordHiddenSignal = signal(true);
-  readonly isConfirmPasswordHiddenSignal = signal(true);
+  readonly isPasswordHiddenSignal = signal<boolean>(true);
+  readonly isConfirmPasswordHiddenSignal = signal<boolean>(true);
 
   get isPasswordHidden() {
     return this.isPasswordHiddenSignal();
