@@ -9,7 +9,16 @@
     </p>
   </div>
   <div>
-    <input type="password" placeholder="Senha" formControlName="password" />
+    <input
+      [attr.type]="isPasswordHidden ? 'password' : 'text'"
+      placeholder="Senha"
+      formControlName="password"
+    />
+    <button type="button" (click)="togglePasswordVisibility('password')">
+      <mat-icon>{{
+        isPasswordHidden ? "visibility" : "visibility_off"
+      }}</mat-icon>
+    </button>
     <p
       *ngIf="errors.password?.['required'] && loginForm.get('password')?.value!==null"
       class="paragraph validation errors"
