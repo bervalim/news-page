@@ -9,6 +9,7 @@ import {
   TUserResponse,
 } from '../interfaces/user.interface';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,10 @@ export class UserService {
     });
   }
 
+  getUser() {
+    return this.userSignal();
+  }
+
   registerUserService(formData: TCreateUserDataRequest) {
     return this.userRequest.registerUsersRequest(formData).subscribe({
       next: (data: IRegisterUserResponse) => {
@@ -32,6 +37,11 @@ export class UserService {
         this.router.navigateByUrl('/login');
       },
       error: (error) => {
+        if (error instanceof HttpErrorResponse) {
+          if (error.error === 'Email already exists') {
+            alert('Já existe um usuário cadastrado com este e-mail');
+          }
+        }
         console.log(error);
       },
     });
@@ -46,10 +56,18 @@ export class UserService {
           JSON.stringify(data.accessToken)
         );
         localStorage.setItem('@UserIdNewsPage', JSON.stringify(data.user.id));
+        alert(`Seja bem-vindo,${data.user.name}`);
         this.router.navigateByUrl('/dashboard');
       },
       error: (error) => {
-        console.log(error);
+        if (error instanceof HttpErrorResponse) {
+          if (
+            error.error === 'Cannot find user' ||
+            error.error === 'Incorrect password'
+          ) {
+            alert('Senha ou E-mail inválidos');
+          }
+        }
       },
     });
   }

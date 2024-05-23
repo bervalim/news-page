@@ -9,6 +9,8 @@ import {
 import { MatCommonModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { TLoginUserDataRequest } from '../../interfaces/user.interface';
 
 @Component({
   selector: 'app-login-form',
@@ -24,7 +26,10 @@ import { RouterLink } from '@angular/router';
   styleUrl: './login-form.component.scss',
 })
 export class LoginFormComponent {
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private userService: UserService
+  ) {}
 
   loginForm = new FormGroup({
     email: new FormControl<string | null>(null, [Validators.required]),
@@ -53,7 +58,8 @@ export class LoginFormComponent {
 
   submitLoginForm() {
     if (this.loginForm.status === 'VALID') {
-      console.log(this.loginForm.value);
+      const data = this.loginForm.value as TLoginUserDataRequest;
+      this.userService.loginUserService(data);
     }
   }
 }

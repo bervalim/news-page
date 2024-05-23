@@ -11,6 +11,8 @@ import {
 } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCommonModule } from '@angular/material/core';
+import { UserService } from '../../services/user.service';
+import { TCreateUserDataRequest } from '../../interfaces/user.interface';
 
 export const confirmPasswordValidator: ValidatorFn = (
   control: AbstractControl
@@ -28,7 +30,10 @@ export const confirmPasswordValidator: ValidatorFn = (
   styleUrls: ['./register-form.component.scss'],
 })
 export class RegisterFormComponent {
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private userService: UserService
+  ) {}
 
   readonly isPasswordHiddenSignal = signal<boolean>(true);
   readonly isConfirmPasswordHiddenSignal = signal<boolean>(true);
@@ -84,7 +89,9 @@ export class RegisterFormComponent {
 
   submitRegisterForm() {
     if (this.registerForm.status === 'VALID') {
-      console.log(this.registerForm.value);
+      const data = this.registerForm.value as TCreateUserDataRequest;
+      this.userService.registerUserService(data);
+      this.registerForm.reset();
     }
   }
 }
