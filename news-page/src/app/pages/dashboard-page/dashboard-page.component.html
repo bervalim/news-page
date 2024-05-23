@@ -1,3 +1,7 @@
 <main>
   <app-header></app-header>
+  <div *ngIf="user">
+    <p>{{ user.name[0] }}</p>
+    <button (click)="handleLogout()">Sair</button>
+  </div>
 </main>

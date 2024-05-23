@@ -21,6 +21,7 @@ export class UserService {
     this.userRequest.autoLoginUserRequest()?.subscribe((data: IUser) => {
       const { id, name, email } = data;
       const customUser = { id, name, email };
+      console.log(customUser);
       this.userSignal.set(customUser);
     });
   }
