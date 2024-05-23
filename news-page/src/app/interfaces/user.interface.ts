@@ -22,12 +22,12 @@ export type TLoginUserDataRequest = {
 
 export type TUserResponse = Omit<IUser, 'password'>;
 
-export interface TRegisterUserResponse {
+export interface IRegisterUserResponse {
   accessToken: string;
   user: TUserResponse;
 }
 
-export interface TLoginUserResponse {
+export interface ILoginUserResponse {
   accessToken: string;
   user: TUserResponse;
 }
