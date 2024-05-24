@@ -16,3 +16,5 @@ export const routes: Routes = [
   { path: 'updatepage', component: UpdatePageComponent },
   { path: 'postpage/:id', component: PostPageComponent },
 ];
+
+export const publicRoutes = ['/login', '/register'];

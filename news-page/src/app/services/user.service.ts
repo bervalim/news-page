@@ -10,6 +10,7 @@ import {
 } from '../interfaces/user.interface';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { publicRoutes } from '../app.routes';
 
 @Injectable({
   providedIn: 'root',
@@ -18,12 +19,17 @@ export class UserService {
   readonly userSignal = signal<TUserResponse | null>(null);
 
   constructor(private userRequest: UserRequest, private router: Router) {
+    const pathname = window.location.pathname;
     this.userRequest.autoLoginUserRequest()?.subscribe({
       next: (data: IUser) => {
         const { id, name, email } = data;
         const customUser = { id, name, email };
         this.userSignal.set(customUser);
-        this.router.navigateByUrl('/dashboard');
+        if (publicRoutes.includes(pathname)) {
+          this.router.navigateByUrl('/dashboard');
+        } else {
+          this.router.navigateByUrl(pathname);
+        }
       },
       error: (error) => {
         this.logoutUserService();
