@@ -18,11 +18,16 @@ export class UserService {
   readonly userSignal = signal<TUserResponse | null>(null);
 
   constructor(private userRequest: UserRequest, private router: Router) {
-    this.userRequest.autoLoginUserRequest()?.subscribe((data: IUser) => {
-      const { id, name, email } = data;
-      const customUser = { id, name, email };
-      console.log(customUser);
-      this.userSignal.set(customUser);
+    this.userRequest.autoLoginUserRequest()?.subscribe({
+      next: (data: IUser) => {
+        const { id, name, email } = data;
+        const customUser = { id, name, email };
+        this.userSignal.set(customUser);
+        this.router.navigateByUrl('/dashboard');
+      },
+      error: (error) => {
+        this.logoutUserService();
+      },
     });
   }
 
