@@ -10,6 +10,7 @@ import {
 } from '../interfaces/user.interface';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { publicRoutes } from '../app.routes';
 
 @Injectable({
   providedIn: 'root',
@@ -17,13 +18,21 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class UserService {
   readonly userSignal = signal<TUserResponse | null>(null);
 
+  readonly lastRouteSignal = signal<string | null>(null);
+
   constructor(private userRequest: UserRequest, private router: Router) {
+    const pathname = window.location.pathname;
+
     this.userRequest.autoLoginUserRequest()?.subscribe({
       next: (data: IUser) => {
         const { id, name, email } = data;
         const customUser = { id, name, email };
         this.userSignal.set(customUser);
-        this.router.navigateByUrl('/dashboard');
+        if (publicRoutes.includes(pathname)) {
+          this.router.navigateByUrl('/dashboard');
+        } else {
+          this.router.navigateByUrl(pathname);
+        }
       },
       error: (error) => {
         this.logoutUserService();
@@ -33,6 +42,25 @@ export class UserService {
 
   getUser() {
     return this.userSignal();
+  }
+
+  setLastRoute(route: string) {
+    this.lastRouteSignal.set(route);
+  }
+
+  getLastRoute() {
+    return this.lastRouteSignal();
+  }
+
+  handleNavigation(route: string) {
+    const currentUser = this.getUser();
+    if (currentUser && (route === '/login' || route === '/register')) {
+      const currentRoute = this.router.url;
+      if (currentRoute === '/dashboard' || currentRoute === '/updatepage') {
+        return;
+      }
+    }
+    this.router.navigateByUrl(route);
   }
 
   registerUserService(formData: TCreateUserDataRequest) {
@@ -63,7 +91,12 @@ export class UserService {
         );
         localStorage.setItem('@UserIdNewsPage', JSON.stringify(data.user.id));
         alert(`Seja bem-vindo,${data.user.name}`);
-        this.router.navigateByUrl('/dashboard');
+        const lastRoute = this.getLastRoute();
+        if (lastRoute && !publicRoutes.includes(lastRoute)) {
+          this.router.navigateByUrl(lastRoute);
+        } else {
+          this.router.navigateByUrl('/dashboard');
+        }
       },
       error: (error) => {
         if (error instanceof HttpErrorResponse) {
@@ -80,6 +113,7 @@ export class UserService {
 
   logoutUserService() {
     this.userSignal.set(null);
+    this.setLastRoute(this.router.url);
     localStorage.removeItem('@TokenNewsPage');
     localStorage.removeItem('@UserIdNewsPage');
     this.router.navigateByUrl('/login');

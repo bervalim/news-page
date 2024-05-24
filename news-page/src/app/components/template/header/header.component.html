@@ -1,8 +1,16 @@
 <header>
   <div>
-    <div>
-      <img src="../../../../assets/Logo.svg" />
-      <a>Acessar</a>
+    <div *ngIf="!user">
+      <a routerLink="/"><img src="../../../../assets/Logo.svg" /></a>
+      <a routerLink="/login">Acessar</a>
+    </div>
+    <div *ngIf="user">
+      <a routerLink="/"><img src="../../../../assets/Logo.svg" /></a>
+      <div>
+        <p>{{ user.name[0] }}</p>
+        <a routerLink="/dashboard">Dashboard</a>
+        <button (click)="handleLogout()">Logout</button>
+      </div>
     </div>
   </div>
 </header>

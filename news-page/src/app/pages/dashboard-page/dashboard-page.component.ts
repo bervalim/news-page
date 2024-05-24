@@ -13,14 +13,13 @@ import { Router } from '@angular/router';
 })
 export class DashboardPageComponent {
   constructor(private userService: UserService, private router: Router) {
-    if (!this.user) this.router.navigateByUrl('/login');
+    if (!this.user) {
+      this.userService.setLastRoute(this.router.url);
+      this.router.navigateByUrl('/login');
+    }
   }
 
   get user() {
     return this.userService.getUser();
-  }
-
-  handleLogout() {
-    this.userService.logoutUserService();
   }
 }

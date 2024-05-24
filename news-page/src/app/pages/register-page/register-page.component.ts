@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from '../../components/template/header/header.component';
 import { RegisterFormComponent } from '../../components/register-form/register-form.component';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register-page',
