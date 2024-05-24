@@ -19,8 +19,4 @@ export class DashboardPageComponent {
   get user() {
     return this.userService.getUser();
   }
-
-  handleLogout() {
-    this.userService.logoutUserService();
-  }
 }

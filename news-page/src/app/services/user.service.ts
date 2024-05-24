@@ -18,6 +18,8 @@ import { publicRoutes } from '../app.routes';
 export class UserService {
   readonly userSignal = signal<TUserResponse | null>(null);
 
+  // private pathname = window.location.pathname;
+
   constructor(private userRequest: UserRequest, private router: Router) {
     const pathname = window.location.pathname;
     this.userRequest.autoLoginUserRequest()?.subscribe({
@@ -69,7 +71,8 @@ export class UserService {
         );
         localStorage.setItem('@UserIdNewsPage', JSON.stringify(data.user.id));
         alert(`Seja bem-vindo,${data.user.name}`);
-        this.router.navigateByUrl('/dashboard');
+        const lastRoute = localStorage.getItem('@lastRoute');
+        this.router.navigateByUrl(lastRoute ? lastRoute : '/dashboard');
       },
       error: (error) => {
         if (error instanceof HttpErrorResponse) {
@@ -86,6 +89,7 @@ export class UserService {
 
   logoutUserService() {
     this.userSignal.set(null);
+    localStorage.setItem('@lastRoute', this.router.url);
     localStorage.removeItem('@TokenNewsPage');
     localStorage.removeItem('@UserIdNewsPage');
     this.router.navigateByUrl('/login');
