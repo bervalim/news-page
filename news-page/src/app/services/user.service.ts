@@ -18,7 +18,7 @@ import { publicRoutes } from '../app.routes';
 export class UserService {
   readonly userSignal = signal<TUserResponse | null>(null);
 
-  // private pathname = window.location.pathname;
+  readonly lastRouteSignal = signal<string | null>(null);
 
   constructor(private userRequest: UserRequest, private router: Router) {
     const pathname = window.location.pathname;
@@ -41,6 +41,14 @@ export class UserService {
 
   getUser() {
     return this.userSignal();
+  }
+
+  setLastRoute(route: string) {
+    this.lastRouteSignal.set(route);
+  }
+
+  getLastRoute() {
+    return this.lastRouteSignal();
   }
 
   registerUserService(formData: TCreateUserDataRequest) {
@@ -71,8 +79,12 @@ export class UserService {
         );
         localStorage.setItem('@UserIdNewsPage', JSON.stringify(data.user.id));
         alert(`Seja bem-vindo,${data.user.name}`);
-        const lastRoute = localStorage.getItem('@lastRoute');
-        this.router.navigateByUrl(lastRoute ? lastRoute : '/dashboard');
+        const lastRoute = this.getLastRoute();
+        if (lastRoute && !publicRoutes.includes(lastRoute)) {
+          this.router.navigateByUrl(lastRoute);
+        } else {
+          this.router.navigateByUrl('/dashboard');
+        }
       },
       error: (error) => {
         if (error instanceof HttpErrorResponse) {
@@ -89,7 +101,7 @@ export class UserService {
 
   logoutUserService() {
     this.userSignal.set(null);
-    localStorage.setItem('@lastRoute', this.router.url);
+    this.setLastRoute(this.router.url);
     localStorage.removeItem('@TokenNewsPage');
     localStorage.removeItem('@UserIdNewsPage');
     this.router.navigateByUrl('/login');

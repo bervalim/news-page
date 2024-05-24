@@ -13,7 +13,10 @@ import { HeaderComponent } from '../../components/template/header/header.compone
 })
 export class UpdatePageComponent {
   constructor(private userService: UserService, private router: Router) {
-    if (!this.user) this.router.navigateByUrl('/login');
+    if (!this.user) {
+      this.userService.setLastRoute(this.router.url);
+      this.router.navigateByUrl('/login');
+    }
   }
 
   get user() {

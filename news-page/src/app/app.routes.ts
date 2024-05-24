@@ -10,7 +10,10 @@ import { PostPageComponent } from './pages/post-page/post-page.component';
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'login', component: LoginPageComponent },
-  { path: 'register', component: RegisterPageComponent },
+  {
+    path: 'register',
+    component: RegisterPageComponent,
+  },
   { path: 'allnews', component: AllNewsPageComponent },
   { path: 'dashboard', component: DashboardPageComponent },
   { path: 'updatepage', component: UpdatePageComponent },
