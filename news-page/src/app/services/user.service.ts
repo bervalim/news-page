@@ -22,6 +22,7 @@ export class UserService {
 
   constructor(private userRequest: UserRequest, private router: Router) {
     const pathname = window.location.pathname;
+
     this.userRequest.autoLoginUserRequest()?.subscribe({
       next: (data: IUser) => {
         const { id, name, email } = data;
@@ -49,6 +50,17 @@ export class UserService {
 
   getLastRoute() {
     return this.lastRouteSignal();
+  }
+
+  handleNavigation(route: string) {
+    const currentUser = this.getUser();
+    if (currentUser && (route === '/login' || route === '/register')) {
+      const currentRoute = this.router.url;
+      if (currentRoute === '/dashboard' || currentRoute === '/updatepage') {
+        return;
+      }
+    }
+    this.router.navigateByUrl(route);
   }
 
   registerUserService(formData: TCreateUserDataRequest) {
